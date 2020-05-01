@@ -7,6 +7,7 @@ import './Chat.css';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
+import Users from '../Users/Users';
 
 let socket;
 
@@ -16,8 +17,11 @@ const Chat = ({location})=>{
   const [room, setroom] = useState("");
   const [message, setmessage] = useState('');
   const [messages, setmessages] = useState([]);
+  const [users, setUsers] = useState('')
 
-  const ENDPOINT = 'https://jus-chat-backend.herokuapp.com/';
+  // const ENDPOINT = 'https://jus-chat-backend.herokuapp.com/';
+  const ENDPOINT = 'localhost:5000';
+
 
   useEffect(()=>{
     const {name, room} = queryString.parse(location.search);
@@ -40,14 +44,18 @@ const Chat = ({location})=>{
 
   useEffect(()=>{
     socket.on('message', (message)=>{
-      setmessages([...messages,message]);
+      setmessages(messages => [...messages,message]);
     });
-  },[messages]);
+
+    socket.on('roomData', ({users})=>{
+      setUsers(users);
+    })
+  },[]);
 
   const sendMessage = (event)=>{
     event.preventDefault();
     if(message){
-      socket.emit('sendMessage', message, (()=> setmessage('')));
+      socket.emit('sendMessage', message, ()=> setmessage(''));
     }
   }
 
@@ -55,11 +63,13 @@ const Chat = ({location})=>{
 
   return(
     <div className="outerContainer">
+    <Users users = {users}/>
       <div className="container">
-        <InfoBar room={room}/>
+        <InfoBar room={room} />
         <Messages messages={messages} name={name}/>
         <Input message={message} setmessage={setmessage} sendMessage={sendMessage}/>
       </div>
+      
     </div>
   )
 }
