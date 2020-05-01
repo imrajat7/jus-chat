@@ -19,8 +19,8 @@ const Chat = ({location})=>{
   const [messages, setmessages] = useState([]);
   const [users, setUsers] = useState('')
 
-  // const ENDPOINT = 'https://jus-chat-backend.herokuapp.com/';
-  const ENDPOINT = 'localhost:5000';
+  const ENDPOINT = 'https://jus-chat.herokuapp.com/';
+  // const ENDPOINT = 'localhost:5000';
 
 
   useEffect(()=>{
